@@ -4,12 +4,24 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(express.json());
 
-// ── In-memory database ──────────────────────────────────────────────────────
+// ── Banco de dados em memória ────────────────────────────────────────────────
 let jogos = [
   { id: 1, nome: "The Legend of Zelda", tipo: "Aventura", nota: 10, review: "Um clássico absoluto." },
   { id: 2, nome: "FIFA 23",             tipo: "Esporte",  nota: 7,  review: "Bom para jogar com amigos." },
 ];
 let nextId = 3;
+
+// ── Rota Raiz (Resolve o erro "Cannot GET /" no link do Render) ──────────────
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "API de Jogos Online",
+    documentacao: {
+      login: "POST /login",
+      listar_jogos: "GET /jogos",
+      detalhes_jogo: "GET /jogos/:id"
+    }
+  });
+});
 
 // ── POST /login ─────────────────────────────────────────────────────────────
 app.post("/login", (req, res) => {
@@ -39,7 +51,7 @@ app.get("/jogos/:id", (req, res) => {
   res.status(200).json(jogo);
 });
 
-// ── POST /jogos ──────────────────────────────────────────────────────────────
+// ── POST /jogos ─────────────────────────────────────────────────────────────
 app.post("/jogos", (req, res) => {
   const { nome, tipo, nota, review } = req.body;
 
@@ -83,11 +95,10 @@ app.delete("/jogos/:id", (req, res) => {
   }
 
   jogos.splice(index, 1);
-
   res.status(204).send();
 });
 
-// ── Start ────────────────────────────────────────────────────────────────────
+// Configuração da porta para o Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`API de Jogos rodando na porta ${PORT}`);
