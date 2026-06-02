@@ -1,7 +1,10 @@
 const express = require("express");
+const cors = require("cors"); // ── HABILITA O CORS (LINHA ADICIONADA) ──
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
+
+app.use(cors()); // ── ATIVA O CORS PARA ACESSO WEB (LINHA ADICIONADA) ──
 app.use(express.json());
 
 // ── Banco de dados em memória ────────────────────────────────────────────────
